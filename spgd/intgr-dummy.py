@@ -1,8 +1,7 @@
-from ddm import DMSim
-from SPGD import SPGD
-import numpy as np
 from math import sqrt
-from matplotlib import pyplot as plt
+import numpy as np
+from dummy import ddm
+from dummy.DummyObjects import DummyNonGuiRunner, DMCamOperation
 
 
 def target_spot(beam):
@@ -60,25 +59,34 @@ class DummyWrapper:
         self.mirror.deform(signal)
         return self.mirror.reflect(self.beam)
 
-num_actuators = 100
-mirror = DMSim(num_actuators)
-beam = generate_beam(num_actuators)
-target = target_spot(beam)
 
-plt.figure()
-plt.imshow(beam)
-plt.show()
+class DummySPGD(DMCamOperation):
+    def __init__(self, target, mirror, beam):
+        from SPGD import SPGD
+        DMCamOperation.__init__(self)
+        self.alg = SPGD(ao_wrapper=DummyWrapper(mirror, beam),
+                          num_act=num_actuators,
+                          target=target,
+                          max_v=1,
+                          min_v=-1,
+                          intensity_filter=0.2,
+                          max_iterations=2000,
+                          convergence_criterion=0.01,
+                          gamma=-0.05,
+                          debug=True,
+                          plot=True)
 
-controller = SPGD(ao_wrapper=DummyWrapper(mirror, beam),
-                    num_act=num_actuators,
-                    target=target,
-                    max_v=1,
-                    min_v=-1,
-                    intensity_filter=0.2,
-                    max_iterations=2000,
-                    convergence_criterion=0.01,
-                    gamma=-0.05,
-                    debug=True,
-                    plot=True)
+    def run(self):
+        self.alg.optimise_with_target()
 
-controller.optimise_with_target()
+
+if __name__ == '__main__':
+    num_actuators = 100
+    mirror = ddm.DMSim(num_actuators)
+    beam = generate_beam(num_actuators)
+    target = target_spot(beam)
+
+    app = DummyNonGuiRunner(mirror)
+    app.set_operation(DummySPGD(target, mirror, beam))
+    app.button_pressed()
+

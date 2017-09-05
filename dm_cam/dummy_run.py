@@ -1,5 +1,5 @@
-from dummy.DummyObjects import DummyOperation, DummyMirror
 from dummy.DummyGuiRunner import DummyGuiRunner
+from dummy.DummyObjects import DummyOperation, DummyMirror
 
 if __name__ == '__main__':
     app = DummyGuiRunner()

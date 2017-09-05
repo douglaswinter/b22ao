@@ -10,7 +10,7 @@ conf = confParse.loadSoapyConfig(conf_path)
 atmos = atmosphere.atmos(conf)
 dist = atmos.randomScrns()
 
-# setup dummy DM
+# setup simulations DM
 dm = DM.Piezo(conf)
 n_acts = dm.getActiveActs()
 

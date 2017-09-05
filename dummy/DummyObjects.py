@@ -3,12 +3,10 @@ from dm_cam_operation import DMCamOperation
 
 
 class DummyNonGuiRunner:
-    def __init__(self, title="Dummy runner"):
+    def __init__(self, mirror, title="Dummy runner"):
 
         self.camera = DummyCamera()
         self.operation_thread = None
-
-    def set_mirror(self, mirror):
         self.mirror = mirror
 
     def set_operation(self, operation):
