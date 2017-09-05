@@ -88,7 +88,7 @@ class SPGD:
             square = int(sqrt(self.num_act))
             print(control_signal.reshape([square, square]))
             print("J = " + str(metric))
-            img = self.ao_wrapper.deform_and_capture()
+            img = self.ao_wrapper.deform_and_capture(control_signal)
             self.plot_results(img, metric_history)
 
         return control_signal
