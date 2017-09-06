@@ -123,7 +123,7 @@ def init_mirror(serial):
             print("use x86_64 libraries.")
             sys.path.append(os.path.join(os.path.dirname(__file__), 'Lib64'))
 
-        from adsk import DM
+        from asdk import DM
 
         return DM(serial)
     else:
