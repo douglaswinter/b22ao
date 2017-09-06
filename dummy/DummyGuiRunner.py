@@ -8,12 +8,12 @@ import copy
 
 class DummyGuiRunner(wx.App):
 
-    def __init__(self, redirect=False, filename=None, title='Python Interface to DataRay'):
+    def __init__(self, mirror, redirect=False, filename=None, title='Python Interface to DataRay'):
         wx.App.__init__(self, redirect, filename)
         self.frame = wx.Frame(parent=None, id=wx.ID_ANY, size=(310, 130), title=title)
 
         self.camera = DummyCamera()
-        self.mirror = None
+        self.mirror = mirror
 
         # Button Panel
         bp = wx.Panel(parent=self.frame, id=wx.ID_ANY, size=(300, 100))
@@ -27,9 +27,6 @@ class DummyGuiRunner(wx.App):
         self.operation_thread = None
 
         self.frame.Show()
-
-    def set_mirror(self, mirror):
-        self.mirror = mirror
 
     def set_operation(self, operation):
         self.button.SetLabel(operation.get_label())

@@ -1,5 +1,5 @@
 import numpy
-from dm_cam_operation import DMCamOperation
+from dm_cam.dm_cam_operation import DMCamOperation
 
 
 class DummyNonGuiRunner:

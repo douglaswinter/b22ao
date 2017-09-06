@@ -32,9 +32,13 @@ class DMCamOperation(Thread):
         This method is called by DMCamRunner, getting the camera object through activeX
         :param camera:
         """
+        import time
+
         self.camera = camera
         self.camera.ctrl.StartDriver()
+        time.sleep(5)
         self.camera.ctrl.StartDevice()
+        time.sleep(1)
 
     def set_mirror(self, mirror):
         """
@@ -68,8 +72,7 @@ class DMCamOperation(Thread):
         """
         data = self.camera.ctrl.GetWinCamDataAsVariant()
         data = [[x] for x in data]
-        data = numpy.reshape(data, [640, 480])
-        return data
+        return numpy.reshape(data, [640, 480])
 
     def deform_and_capture(self, signal):
         """Send signal to mirror, wait 200 ms, then image it"""
