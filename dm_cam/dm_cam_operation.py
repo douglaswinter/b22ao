@@ -72,8 +72,8 @@ class DMCamOperation(Thread):
         return data
 
     def deform_and_capture(self, signal):
-        """Send signal to mirror, then image it"""
+        """Send signal to mirror, wait 200 ms, then image it"""
         import time
         self.deform(signal)
-        time.sleep(200)
+        time.sleep(0.2)
         return self.capture()

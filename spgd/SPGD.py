@@ -120,7 +120,7 @@ class SPGD:
     def gen_perturbation(self):
         amplitude = 0.2
         sigmas = [-amplitude, amplitude]
-        return np.clip(np.random.choice(sigmas, self.num_act), self.min_v, self.max_v)
+        return np.random.choice(sigmas, self.num_act)
 
     def difference_with_target(self, signal):
 
