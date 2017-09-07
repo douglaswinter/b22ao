@@ -25,6 +25,7 @@ def poke_pixel(number):
 
 def show_image(img, title=""):
     from matplotlib import pyplot as plt
+
     plt.figure()
     plt.imshow(img)
     plt.title(title)
