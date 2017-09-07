@@ -37,7 +37,7 @@ class DMCamRunner(wx.App):
 
         self.counter = 0
         sink = EventSink(self.frame)
-        self.sink = comtypes.client.GetEvents(self.gd.ctrl, sink)
+        self.sink = comtypes.client.GetEvents(self.camera.ctrl, sink)
 
         # Button Panel
         bp = wx.Panel(parent=self.frame, id=wx.ID_ANY, size=(215, 250))
