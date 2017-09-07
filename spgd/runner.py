@@ -14,8 +14,12 @@ intensity_filter = 0.25
 
 
 def target_from_file(path):
-    import numpy
-    return numpy.fromfile(path)
+    import pandas as pd
+    import numpy as np
+
+    img = pd.read_csv(path, skiprows=5, header=None)
+    img = pd.DataFrame.as_matrix(img)
+    return np.reshape(img, ([479, 640]))
 
 
 class WinCamDALPAOSPGD(DMCamOperation):
