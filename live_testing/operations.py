@@ -19,7 +19,7 @@ class SumOfInfluence(DMCamOperation):
 
 def poke_pixel(number):
     signal = numpy.zeros(97)
-    signal[number]=1
+    signal[number] = 1
     return signal
 
 

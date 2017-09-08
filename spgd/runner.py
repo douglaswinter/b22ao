@@ -3,7 +3,7 @@ from dm_cam_runner import DMCamRunner
 from dm_cam_operation import DMCamOperation
 
 # parameters for SPGD algorithm
-target_path = "C:\\Users\\blah"
+target = "C:\\Users\\blah"
 num_act = 97
 maxV = 1
 minV = -1
@@ -13,17 +13,8 @@ gamma = -0.1
 intensity_filter = 0.25
 
 
-def target_from_file(path):
-    import pandas as pd
-    import numpy as np
-
-    img = pd.read_csv(path, skiprows=5, header=None)
-    img = pd.DataFrame.as_matrix(img)
-    return np.reshape(img, ([479, 640]))
-
-
 class WinCamDALPAOSPGD(DMCamOperation):
-    def __init__(self, target):
+    def __init__(self, target_path):
         from SPGD import SPGD
         DMCamOperation.__init__(self, label="SPGD")
 
@@ -32,12 +23,20 @@ class WinCamDALPAOSPGD(DMCamOperation):
                          num_act,
                          maxV,
                          minV,
-                         target,
+                         self.target_from_file(target_path),
                          convergence_criterion,
                          max_iterations,
                          gamma,
                          intensity_filter
                          )
+
+    def target_from_file(self, path):
+        import pandas as pd
+        import numpy as np
+
+        img = pd.read_csv(path, skiprows=5, header=None)
+        img = pd.DataFrame.as_matrix(img)
+        return np.reshape(img, ([479, 640]))
 
     def run(self):
         self.spgd.optimise_with_target()
@@ -45,5 +44,5 @@ class WinCamDALPAOSPGD(DMCamOperation):
 
 if __name__ == "__main__":
     app = DMCamRunner(mirror_serial="BAX112", title="SPGD optimization of deformable mirror")
-    app.set_operation(WinCamDALPAOSPGD(target_from_file(target_path)))
+    app.set_operation(WinCamDALPAOSPGD(target))
     app.MainLoop()
