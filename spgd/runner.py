@@ -1,14 +1,28 @@
+import sys, os
+sys.path.insert(0, os.path.abspath('..'))
 # Integrated DM and WinCamD system for custom operations
-from dm_cam_runner import DMCamRunner
-from dm_cam_operation import DMCamOperation
+from dm_cam.dm_cam_runner import DMCamRunner
+from dm_cam.dm_cam_operation import DMCamOperation
 
+
+import struct
+
+''' Add '/Lib' or '/Lib64' to path '''
+
+if (8 * struct.calcsize("P")) == 32:
+    print("Use x86 libraries.")
+    sys.path.append(os.path.join(os.path.dirname(__file__), 'Lib'))
+else:
+    print("Use x86_64 libraries.")
+    sys.path.append(os.path.join(os.path.dirname(__file__), 'Lib64'))
+    
 # parameters for SPGD algorithm
-target = "C:\\Users\\blah"
+target = "C:\\Users\\Public\\Documents\\Python Scripts\\b22ao\\spgd\\target.wct"
 num_act = 97
 maxV = 1
 minV = -1
 convergence_criterion = 1e-6
-max_iterations = 5000
+max_iterations = 15
 gamma = -0.1
 intensity_filter = 0.25
 
@@ -19,10 +33,14 @@ def target_from_file(path):
 
     img = pd.read_csv(path, skiprows=5, header=None)
     img = pd.DataFrame.as_matrix(img)
-    return np.reshape(img, ([479, 640]))
+    img = np.reshape(img, ([479, 640]))
+    target = np.array([480, 640])
+    target[0:480, :]=img
+    target[480, :] = np.ones([1,640])
+    return target
 
 
-def generate_gaussian_target(size=([479, 640]), fwhm=20, centre=None):
+def generate_gaussian_target(size=([480, 640]), fwhm=20, centre=None):
     import numpy as np
     x = np.arange(0, size[0], 1, float)
     y = np.arange(0, size[1], 1, float)
@@ -52,7 +70,8 @@ class WinCamDALPAOSPGD(DMCamOperation):
                          convergence_criterion=convergence_criterion,
                          max_iterations=max_iterations,
                          gamma=gamma,
-                         intensity_filter=intensity_filter
+                         intensity_filter=intensity_filter,
+                         debug=True
                          )
 
     def run(self):
@@ -61,5 +80,5 @@ class WinCamDALPAOSPGD(DMCamOperation):
 
 if __name__ == "__main__":
     app = DMCamRunner(mirror_serial="BAX112", title="SPGD optimization of deformable mirror")
-    app.set_operation(WinCamDALPAOSPGD(target))
+    app.set_operation(WinCamDALPAOSPGD(target_from_file(target)))
     app.MainLoop()

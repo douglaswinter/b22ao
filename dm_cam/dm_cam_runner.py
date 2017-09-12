@@ -34,6 +34,7 @@ class DMCamRunner(wx.App):
 
         # Start camera
         self.camera = wx.lib.activex.ActiveXCtrl(p, 'DATARAYOCX.GetDataCtrl.1')
+        self.camera.ctrl.StartDriver()
 
         self.counter = 0
         sink = EventSink(self.frame)
@@ -54,11 +55,11 @@ class DMCamRunner(wx.App):
 
         # Custom controls
         t = wx.StaticText(bp, label="File:", pos=(5, 115))
-        self.ti = wx.TextCtrl(bp, value="C:\\Users\\Public\\Documents\\output.csv", pos=(30, 115), size=(170, -1))
+        self.ti = wx.TextCtrl(bp, value="C:\Users\Public\Documents\output.csv", pos=(30, 115), size=(170, -1))
         self.rb = wx.RadioBox(bp, label="Data:", pos=(5, 140), choices=["Profile", "WinCam"])
         self.cb = wx.ComboBox(bp, pos=(5, 200), choices=["Profile_X", "Profile_Y", "Both"])
         self.cb.SetSelection(0)
-        self.button = wx.Button(bp, label="", pos=(100, 225))
+        self.button = wx.Button(bp, label="Test", pos=(100, 225))
         self.button.Bind(wx.EVT_BUTTON, self.button_pressed)
 
         # Pictures
@@ -86,33 +87,37 @@ class DMCamRunner(wx.App):
         self.frame.SetSizer(col1)
 
         # Initialise mirror if provided
-        self.mirror = self.init_mirror(mirror_serial)
+        self.mirror = init_mirror(mirror_serial)
 
         # Worker thread
         self.operation_thread = None
 
         self.frame.Show()
-
+    
     def set_operation(self, operation):
         """
         Set the function to run (on a separate thread) on pressing the button
 
         :param operation: subclass of DMCamOperation
         """
-        self.button.SetLabel(operation.label())
+        self.button.SetLabel(operation.get_label())
         self.operation_thread = operation
         self.operation_thread.set_camera(self.camera)
         self.operation_thread.set_mirror(self.mirror)
+        print("Operation set")
 
-    def button_pressed(self):
+    def button_pressed(self, event):
+        print("Button pressed")
         if self.operation_thread is not None:
-            self.operation_thread.begin()
+            print("Begining operation")
+            self.operation_thread.start()
         else:
             print("Operation not set")
 
 
 def init_mirror(serial):
     if serial:
+        """
         import sys
         import os
         import struct
@@ -124,7 +129,9 @@ def init_mirror(serial):
             sys.path.append(os.path.join(os.path.dirname(__file__), 'Lib64'))
 
         from asdk import DM
-
+        """
+        from asdk import DM
+        print("Mirror started")
         return DM(serial)
     else:
         print("WARNING: no mirror serial provided")

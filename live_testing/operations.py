@@ -8,18 +8,19 @@ class SumOfInfluence(DMCamOperation):
 
     def run(self):
         import time
-        img = numpy.zeros([640, 480])
+        img = numpy.zeros([480, 640])
         for i in range(97):
             self.deform(poke_pixel(i))
             time.sleep(0.2)
             img += self.capture()
+            print("Iteration "+ str(i))
 
         show_image(img, "Sum of influence functions")
 
 
 def poke_pixel(number):
     signal = numpy.zeros(97)
-    signal[number] = 1
+    signal[number] = 0.5
     return signal
 
 

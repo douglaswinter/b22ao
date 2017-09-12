@@ -20,6 +20,7 @@ class DMCamOperation(Thread):
         self.camera = None
         self.mirror = None
         self.label = label
+        print("")
 
     def run(self):
         """
@@ -35,8 +36,8 @@ class DMCamOperation(Thread):
         import time
 
         self.camera = camera
-        self.camera.ctrl.StartDriver()
-        time.sleep(5)
+        #self.camera.ctrl.StartDriver()
+        #time.sleep(5)
         self.camera.ctrl.StartDevice()
         time.sleep(1)
 
@@ -72,7 +73,7 @@ class DMCamOperation(Thread):
         """
         data = self.camera.ctrl.GetWinCamDataAsVariant()
         data = [[x] for x in data]
-        return numpy.reshape(data, [640, 480])
+        return numpy.reshape(data, [480, 640])
 
     def deform_and_capture(self, signal):
         """Send signal to mirror, wait 200 ms, then image it"""
