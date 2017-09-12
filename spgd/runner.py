@@ -13,30 +13,47 @@ gamma = -0.1
 intensity_filter = 0.25
 
 
+def target_from_file(path):
+    import pandas as pd
+    import numpy as np
+
+    img = pd.read_csv(path, skiprows=5, header=None)
+    img = pd.DataFrame.as_matrix(img)
+    return np.reshape(img, ([479, 640]))
+
+
+def generate_gaussian_target(size=([479, 640]), fwhm=20, centre=None):
+    import numpy as np
+    x = np.arange(0, size[0], 1, float)
+    y = np.arange(0, size[1], 1, float)
+    y = y[:, np.newaxis]
+
+    if centre is None:
+        x0 = size[0] // 2
+        y0 = size[1] // 2
+    else:
+        x0 = centre[0]
+        y0 = centre[1]
+
+    return np.exp(-4*np.log(2) * ((x-x0)**2 + (y-y0)**2) / fwhm**2)
+
+
 class WinCamDALPAOSPGD(DMCamOperation):
-    def __init__(self, target_path):
+    def __init__(self, target):
         from SPGD import SPGD
         DMCamOperation.__init__(self, label="SPGD")
 
         # initiate spgd object
         self.spgd = SPGD(self,
-                         num_act,
-                         maxV,
-                         minV,
-                         self.target_from_file(target_path),
-                         convergence_criterion,
-                         max_iterations,
-                         gamma,
-                         intensity_filter
+                         num_act=num_act,
+                         max_v=maxV,
+                         min_v=minV,
+                         target=target,
+                         convergence_criterion=convergence_criterion,
+                         max_iterations=max_iterations,
+                         gamma=gamma,
+                         intensity_filter=intensity_filter
                          )
-
-    def target_from_file(self, path):
-        import pandas as pd
-        import numpy as np
-
-        img = pd.read_csv(path, skiprows=5, header=None)
-        img = pd.DataFrame.as_matrix(img)
-        return np.reshape(img, ([479, 640]))
 
     def run(self):
         self.spgd.optimise_with_target()
