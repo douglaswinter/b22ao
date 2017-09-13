@@ -16,19 +16,6 @@ gamma = -0.1
 intensity_filter = 0.25
 
 
-def target_from_file(path):
-    import pandas as pd
-    import numpy as np
-
-    img = pd.read_csv(path, skiprows=5, header=None)
-    img = pd.DataFrame.as_matrix(img)
-    img = np.reshape(img, ([479, 640]))
-    target = np.array([480, 640])
-    target[0:480, :]=img
-    target[480, :] = np.ones([1,640])
-    return target
-
-
 class WinCamDALPAOSPGD(DMCamOperation):
     def __init__(self, target=None):
         from SPGD import SPGD

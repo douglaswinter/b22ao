@@ -11,7 +11,7 @@ def generate_gaussian_target(beam, fwhm=5e-3, intensity_filter=0.25, centre=None
     y = y[:, np.newaxis]
 
     if not centre:
-        y0, x0= find_centre(beam, intensity_filter)
+        y0, x0 = find_centre(beam, intensity_filter)
     else:
         y0, x0 = centre
 

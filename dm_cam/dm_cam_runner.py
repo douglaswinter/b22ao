@@ -28,6 +28,14 @@ class DMCamRunner(wx.App):
         :param title: A title for the GUI window
         """
         wx.App.__init__(self, redirect, filename)
+
+        # Initialise mirror if provided
+        self.mirror = init_mirror(mirror_serial)
+
+        # Worker thread
+        self.operation_thread = None
+
+        # Now for the GUI...
         self.frame = wx.Frame(parent=None, id=wx.ID_ANY, size=(760, 500), title=title)
 
         # Panel
@@ -87,14 +95,8 @@ class DMCamRunner(wx.App):
         col1 = wx.BoxSizer(wx.VERTICAL)
         col1.Add(item=row1, flag=wx.BOTTOM, border=10)
         col1.Add(item=row2, flag=wx.ALIGN_CENTER_HORIZONTAL)
+
         self.frame.SetSizer(col1)
-
-        # Initialise mirror if provided
-        self.mirror = init_mirror(mirror_serial)
-
-        # Worker thread
-        self.operation_thread = None
-
         self.frame.Show()
     
     def set_operation(self, operation):

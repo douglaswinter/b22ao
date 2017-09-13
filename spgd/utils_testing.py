@@ -42,15 +42,28 @@ def random_beam(size=([480, 640]), spots=6):
         beam += individual_gauss
     return beam
 
-beam = random_beam(spots=2)
-# beam = six_part_beam()
+def target_from_file(path):
 
+    import pandas as pd
+    import numpy as np
+
+    img = pd.read_csv(path, skiprows=5, header=None)
+    img = pd.DataFrame.as_matrix(img)
+    img = np.reshape(img, ([479, 640]))
+    target = np.ones([480, 640])
+    target[:-1, :] = img
+    return target
+
+# beam = random_beam(spots=2)
+# beam = six_part_beam()
+beam = target_from_file("target.wct")
+
+# gaussian FWHM
 pixel_size = 17e-6
 target_size = 1e-3
+fwhm = target_size/pixel_size
 
-
-target = SPGDutils.generate_gaussian_target(beam, target_size/pixel_size, 0.25)
-# target = SPGDutils.generate_gaussian_target(beam, 3, 0.25)
+target = SPGDutils.generate_gaussian_target(beam, fwhm, 0.25)
 
 plt.figure()
 plt.imshow(beam)
