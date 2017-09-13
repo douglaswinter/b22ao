@@ -4,17 +4,6 @@ sys.path.insert(0, os.path.abspath('..'))
 from dm_cam.dm_cam_runner import DMCamRunner
 from dm_cam.dm_cam_operation import DMCamOperation
 
-
-import struct
-
-''' Add '/Lib' or '/Lib64' to path '''
-
-if (8 * struct.calcsize("P")) == 32:
-    print("Use x86 libraries.")
-    sys.path.append(os.path.join(os.path.dirname(__file__), 'Lib'))
-else:
-    print("Use x86_64 libraries.")
-    sys.path.append(os.path.join(os.path.dirname(__file__), 'Lib64'))
     
 # parameters for SPGD algorithm
 target = "C:\\Users\\Public\\Documents\\Python Scripts\\b22ao\\spgd\\target.wct"

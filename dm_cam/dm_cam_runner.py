@@ -21,13 +21,14 @@ class DMCamRunner(wx.App):
         Object to initialise WinCamD through activeX and (optionally) an ALPAO deformable mirror
         and perform a custom operation on a separate thread.
 
-        Operation must be implemented as a subclass of DMCamOperation, and set using DMCamRunner.set_operation(operation)
+        Operation must be implemented as a subclass of DMCamOperation,
+        and set using DMCamRunner.set_operation(operation)
 
         :param mirror_serial: e.g. "BAX112"
         :param title: A title for the GUI window
         """
         wx.App.__init__(self, redirect, filename)
-        self.frame = wx.Frame(parent=None, id=wx.ID_ANY,size=(760,500), title=title)
+        self.frame = wx.Frame(parent=None, id=wx.ID_ANY, size=(760, 500), title=title)
 
         # Panel
         p = wx.Panel(self.frame, wx.ID_ANY)
@@ -55,10 +56,12 @@ class DMCamRunner(wx.App):
 
         # Custom controls
         t = wx.StaticText(bp, label="File:", pos=(5, 115))
-        self.ti = wx.TextCtrl(bp, value="C:\Users\Public\Documents\output.csv", pos=(30, 115), size=(170, -1))
+        self.ti = wx.TextCtrl(bp, value="C:\\Users\\Public\\Documents\\output.csv", pos=(30, 115), size=(170, -1))
         self.rb = wx.RadioBox(bp, label="Data:", pos=(5, 140), choices=["Profile", "WinCam"])
         self.cb = wx.ComboBox(bp, pos=(5, 200), choices=["Profile_X", "Profile_Y", "Both"])
         self.cb.SetSelection(0)
+
+        # Button which triggers our operation
         self.button = wx.Button(bp, label="Test", pos=(100, 225))
         self.button.Bind(wx.EVT_BUTTON, self.button_pressed)
 
@@ -117,20 +120,7 @@ class DMCamRunner(wx.App):
 
 def init_mirror(serial):
     if serial:
-        """
-        import sys
-        import os
-        import struct
-        if (8 * struct.calcsize("P")) == 32:
-            print("Use x86 libraries.")
-            sys.path.append(os.path.join(os.path.dirname(__file__), 'Lib'))
-        else:
-            print("use x86_64 libraries.")
-            sys.path.append(os.path.join(os.path.dirname(__file__), 'Lib64'))
-
-        from asdk import DM
-        """
-        from asdk import DM
+        from Lib64.asdk import DM
         print("Mirror started")
         return DM(serial)
     else:

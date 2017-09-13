@@ -50,10 +50,37 @@ class SPGD:
         J = Sum_x( Sum_y( [ I_actual(x,y) - I_target(x,y) ]^2 ) )
         """
         if self.target is None:
-            print("Target not set, optimising by minimising max distance from centre of mass")
-            return self.optimize(self.biggest_distance_from_centre)
-        else:
-            return self.optimize(self.difference_with_target)
+            print("Target not set; generating a Gaussian target...")
+            self.target = self.generate_gaussian_target()
+
+        return self.optimize(self.difference_with_target)
+
+    def generate_gaussian_target(self, fwhm=5e-3):
+        """If target is not provided, will capture image,
+        and generate a gaussian with specified FWHM"""
+
+        beam = self.ao_wrapper.deform_and_capture(np.zeros(self.num_act))
+
+        x = np.arange(0, beam.shape[0], 1, float)
+        y = np.arange(0, beam.shape[1], 1, float)
+        y = y[:, np.newaxis]
+
+        x0, y0 = self.find_centre(beam)
+
+        target = np.exp(-4*np.log(2) * ((x-x0)**2 + (y-y0)**2) / fwhm**2)
+
+        if self.debug:
+            plt.figure()
+            plt.imshow(beam)
+            plt.title("Imaged beam")
+
+            plt.figure()
+            plt.imshow(target)
+            plt.title("Generated target")
+
+            plt.show()
+
+        return target
 
     '''
     run the algorithm
