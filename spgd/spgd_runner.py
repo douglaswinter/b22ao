@@ -29,26 +29,17 @@ def target_from_file(path):
     return target
 
 
-def generate_gaussian_target(size=([480, 640]), fwhm=20, centre=None):
-    import numpy as np
-    x = np.arange(0, size[0], 1, float)
-    y = np.arange(0, size[1], 1, float)
-    y = y[:, np.newaxis]
-
-    if centre is None:
-        x0 = size[0] // 2
-        y0 = size[1] // 2
-    else:
-        x0 = centre[0]
-        y0 = centre[1]
-
-    return np.exp(-4*np.log(2) * ((x-x0)**2 + (y-y0)**2) / fwhm**2)
-
-
 class WinCamDALPAOSPGD(DMCamOperation):
-    def __init__(self, target):
+    def __init__(self, target=None):
         from SPGD import SPGD
+        import SPGDutils
+
         DMCamOperation.__init__(self, label="SPGD")
+
+        if not target:
+            print("Target not specified, will generate from camera capture")
+            width = 5e-3 // 17e-6
+            target = SPGDutils.generate_gaussian_target(self.capture(), width, 0.25)
 
         # initiate spgd object
         self.spgd = SPGD(self,
@@ -68,6 +59,8 @@ class WinCamDALPAOSPGD(DMCamOperation):
 
 
 if __name__ == "__main__":
-    app = DMCamRunner(mirror_serial="BAX112", title="SPGD optimization of deformable mirror")
-    app.set_operation(WinCamDALPAOSPGD(target_from_file(target)))
+    mirror_serial = "BAX112"
+
+    app = DMCamRunner(mirror_serial=mirror_serial, title="SPGD optimization of deformable mirror")
+    app.set_operation(WinCamDALPAOSPGD())
     app.MainLoop()

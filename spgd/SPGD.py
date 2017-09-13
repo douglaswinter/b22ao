@@ -1,3 +1,4 @@
+import SPGDutils
 import numpy as np
 from math import sqrt, ceil, floor
 import matplotlib.pyplot as plt
@@ -165,6 +166,7 @@ class SPGD:
 
         img = self.ao_wrapper.deform_and_capture(signal)
 
+        centre = SPGDutils.find_centre(img, self.intensity_filter)
         centre = self.find_centre(img)
 
         distance = 0
