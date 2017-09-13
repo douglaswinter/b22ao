@@ -5,7 +5,6 @@ import comtypes.client
 
 
 class EventSink(object):
-
     def __init__(self, frame):
         self.counter = 0
         self.frame = frame
@@ -45,6 +44,7 @@ class DMCamRunner(wx.App):
         self.camera = wx.lib.activex.ActiveXCtrl(p, 'DATARAYOCX.GetDataCtrl.1')
         self.camera.ctrl.StartDriver()
 
+        # Start event counter
         self.counter = 0
         sink = EventSink(self.frame)
         self.sink = comtypes.client.GetEvents(self.camera.ctrl, sink)
@@ -52,7 +52,7 @@ class DMCamRunner(wx.App):
         # Button Panel
         bp = wx.Panel(parent=self.frame, id=wx.ID_ANY, size=(215, 250))
         b1 = wx.lib.activex.ActiveXCtrl(parent=bp, size=(200, 50), pos=(7, 0), axID='DATARAYOCX.ButtonCtrl.1')
-        b1.ctrl.ButtonID = 297  # Id's for some ActiveX controls must be set
+        b1.ctrl.ButtonID = 297
         b2 = wx.lib.activex.ActiveXCtrl(parent=bp, size=(100, 25), pos=(5, 55), axID='DATARAYOCX.ButtonCtrl.1')
         b2.ctrl.ButtonID = 171
         b3 = wx.lib.activex.ActiveXCtrl(parent=bp, size=(100, 25), pos=(110, 55), axID='DATARAYOCX.ButtonCtrl.1')
@@ -90,7 +90,7 @@ class DMCamRunner(wx.App):
         row1.Add(pic)
         row1.Add(item=tpic, flag=wx.LEFT, border=10)
         row2 = wx.BoxSizer(wx.HORIZONTAL)
-        row2.Add(self.px, 0, wx.RIGHT, 100)  # Arguments: item, proportion, flags, border
+        row2.Add(self.px, 0, wx.RIGHT, 100)
         row2.Add(self.py)
         col1 = wx.BoxSizer(wx.VERTICAL)
         col1.Add(item=row1, flag=wx.BOTTOM, border=10)
@@ -98,7 +98,7 @@ class DMCamRunner(wx.App):
 
         self.frame.SetSizer(col1)
         self.frame.Show()
-    
+
     def set_operation(self, operation):
         """
         Set the function to run (on a separate thread) on pressing the button
