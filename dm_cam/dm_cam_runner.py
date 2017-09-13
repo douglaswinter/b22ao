@@ -63,8 +63,8 @@ class DMCamRunner(wx.App):
         b4.ctrl.ButtonID = 179
 
         # Custom controls
-        t = wx.StaticText(bp, label="File:", pos=(5, 115))
-        self.ti = wx.TextCtrl(bp, value="C:\\Users\\Public\\Documents\\output.csv", pos=(30, 115), size=(170, -1))
+        wx.StaticText(bp, label="File:", pos=(5, 115))
+        self.ti = wx.TextCtrl(bp, value="C:\Users\Public\Documents\output.csv", pos=(30, 115), size=(170, -1))
         self.rb = wx.RadioBox(bp, label="Data:", pos=(5, 140), choices=["Profile", "WinCam"])
         self.cb = wx.ComboBox(bp, pos=(5, 200), choices=["Profile_X", "Profile_Y", "Both"])
         self.cb.SetSelection(0)
@@ -76,7 +76,7 @@ class DMCamRunner(wx.App):
         # Pictures
         pic = wx.lib.activex.ActiveXCtrl(parent=self.frame, size=(250, 250), axID='DATARAYOCX.CCDimageCtrl.1')
         tpic = wx.lib.activex.ActiveXCtrl(parent=self.frame, size=(250, 250), axID='DATARAYOCX.ThreeDviewCtrl.1')
-        palette = wx.lib.activex.ActiveXCtrl(parent=self.frame, size=(10, 250), axID='DATARAYOCX.PaletteBarCtrl.1')
+        wx.lib.activex.ActiveXCtrl(parent=self.frame,size=(10,250), axID='DATARAYOCX.PaletteBarCtrl.1')
 
         # Profiles
         self.px = wx.lib.activex.ActiveXCtrl(parent=self.frame, size=(300, 200), axID='DATARAYOCX.ProfilesCtrl.1')
@@ -122,7 +122,7 @@ class DMCamRunner(wx.App):
 
 def init_mirror(serial):
     if serial:
-        from Lib64.asdk import DM
+        from Lib.asdk import DM
         print("Mirror started")
         return DM(serial)
     else:

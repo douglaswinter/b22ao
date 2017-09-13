@@ -65,6 +65,7 @@ class SPGD:
     def optimize(self, strategy):
         control_signal = self.initialise_control_signal()
         metric = strategy(control_signal)
+        print("ignore the following")
         iteration = 0
         metric_history = []
         while metric > self.convergence_criterion and iteration < self.max_iterations:
@@ -86,8 +87,7 @@ class SPGD:
         if self.plot:
             print("***************\nFinished after " + str(iteration) + " iterations\n")
             print("Control vector:")
-            square = int(sqrt(self.num_act))
-            print(control_signal.reshape([square, square]))
+            print(control_signal)
             print("J = " + str(metric))
             img = self.ao_wrapper.deform_and_capture(control_signal)
             self.plot_results(img, metric_history)
@@ -126,13 +126,14 @@ class SPGD:
     def difference_with_target(self, signal):
 
         img = self.ao_wrapper.deform_and_capture(signal)
-
+        np.savetxt("raw_capture.csv", img, delimiter=",")
+        img = SPGDutils.normalise_and_filter(img, 0)
+        np.savetxt("normalised_capture.csv", img, delimiter=",")
         error = 0
 
         for i in range(img.shape[0]):
             for j in range(img.shape[1]):
                 error += (img[i, j] - self.target[i, j])**2
-
         return error
 
     def biggest_distance_from_centre(self, signal):

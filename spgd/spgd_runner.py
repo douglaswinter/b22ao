@@ -11,42 +11,44 @@ num_act = 97
 maxV = 1
 minV = -1
 convergence_criterion = 1e-6
-max_iterations = 15
-gamma = -0.1
+max_iterations = 5
+gamma = -100
 intensity_filter = 0.25
 
 
 class WinCamDALPAOSPGD(DMCamOperation):
     def __init__(self, target=None):
-        from SPGD import SPGD
+            
+        DMCamOperation.__init__(self, label="SPGD", burn=True)
+        
+        self.target = target
+
+    def run(self):
         import SPGDutils
-
-        DMCamOperation.__init__(self, label="SPGD")
-
-        if not target:
+        from SPGD import SPGD
+        if not self.target:
             print("Target not specified, will generate from camera capture")
-            width = 5e-3 // 17e-6
-            target = SPGDutils.generate_gaussian_target(self.capture(), width, 0.25)
+            width = 1e-3 // 17e-6
+            self.target = SPGDutils.generate_gaussian_target(self.capture(), width, 0.25)
+           # SPGDutils.plot_figures(self.capture(), self.target)
 
         # initiate spgd object
         self.spgd = SPGD(self,
                          num_act=num_act,
                          max_v=maxV,
                          min_v=minV,
-                         target=target,
+                         target=self.target,
                          convergence_criterion=convergence_criterion,
                          max_iterations=max_iterations,
                          gamma=gamma,
                          intensity_filter=intensity_filter,
                          debug=True
                          )
-
-    def run(self):
         self.spgd.optimise_with_target()
 
 
 if __name__ == "__main__":
-    mirror_serial = "BAX112"
+    mirror_serial = "BAX111"
 
     app = DMCamRunner(mirror_serial=mirror_serial, title="SPGD optimization of deformable mirror")
     app.set_operation(WinCamDALPAOSPGD())

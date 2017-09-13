@@ -57,3 +57,11 @@ def normalise_and_filter(img, intensity_filter):
             hi[i, j] = normalised[i, j] > intensity_filter
 
     return hi
+
+def plot_figures(*args):
+    from matplotlib import pyplot as plt
+    for arg in args:
+        plt.figure()
+        plt.imshow(arg)
+        
+    plt.show()

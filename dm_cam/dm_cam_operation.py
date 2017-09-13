@@ -10,7 +10,7 @@ class DMCamOperation(Thread):
     as well as the compound method self.deform_and_capture(signal)
 
     """
-    def __init__(self, label="Custom operation"):
+    def __init__(self, label="Custom operation", burn=True):
         """
         :param label: (Optional) will become the button text
         """
@@ -20,7 +20,13 @@ class DMCamOperation(Thread):
         self.camera = None
         self.mirror = None
         self.label = label
-        print("")
+        
+        
+        if burn:
+            self.burn = numpy.loadtxt("burned_pixels.csv", delimiter=",")
+            self.capture = self.capture_with_burn
+        else:
+            self.capture = self.capture_as_is
 
     def run(self):
         """
@@ -33,13 +39,13 @@ class DMCamOperation(Thread):
         This method is called by DMCamRunner, getting the camera object through activeX
         :param camera:
         """
-        import time
+#        import time
 
         self.camera = camera
-        #self.camera.ctrl.StartDriver()
-        #time.sleep(5)
-        self.camera.ctrl.StartDevice()
-        time.sleep(1)
+#        self.camera.ctrl.StartDriver()
+#        time.sleep(5)
+#        self.camera.ctrl.StartDevice()
+#        time.sleep(1)
 
     def set_mirror(self, mirror):
         """
@@ -66,14 +72,25 @@ class DMCamOperation(Thread):
         """
         return self.label
 
-    def capture(self):
+    def capture_as_is(self):
         """
         Camera snapshot
         :return: 640 x 480 array
         """
         data = self.camera.ctrl.GetWinCamDataAsVariant()
         data = [[x] for x in data]
-        return numpy.reshape(data, [480, 640])
+        data = numpy.reshape(data, [480, 640])
+        return data
+    
+    def capture_with_burn(self):
+        """
+        Camera snapshot
+        :return: 640 x 480 array
+        """
+        data = self.camera.ctrl.GetWinCamDataAsVariant()
+        data = [[x] for x in data]
+        data = numpy.reshape(data, [480, 640])
+        return data - self.burn
 
     def deform_and_capture(self, signal):
         """Send signal to mirror, wait 200 ms, then image it"""

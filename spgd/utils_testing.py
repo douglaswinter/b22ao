@@ -38,8 +38,7 @@ def random_beam(size=([480, 640]), spots=6):
 
     for spot in range(spots):
         centre = [random.randint(0, size[0]), random.randint(0, size[1])]
-        individual_gauss = SPGDutils.generate_gaussian_target(beam, 20, 0, centre)
-        beam += individual_gauss
+        beam += SPGDutils.generate_gaussian_target(beam, 100, 0, centre)
     return beam
 
 def target_from_file(path):
@@ -54,7 +53,7 @@ def target_from_file(path):
     target[:-1, :] = img
     return target
 
-# beam = random_beam(spots=2)
+# beam = random_beam(spots=4)
 # beam = six_part_beam()
 beam = target_from_file("target.wct")
 
