@@ -35,7 +35,6 @@ def find_centre(img, intensity_filter):
     # expected values
     i0 = np.sum(di * np.arange(img.shape[0]))
     j0 = np.sum(dj * np.arange(img.shape[1]))
-
     return make_integer(i0), make_integer(j0)
 
 
@@ -49,7 +48,7 @@ def make_integer(num):
 def normalise_and_filter(img, intensity_filter):
     max_intensity = np.max(img)
     min_intensity = np.min(img)
-    normalised = img
+    normalised = img.copy()
     hi = np.zeros(img.shape)
     for i in range(img.shape[0]):
         for j in range(img.shape[1]):
@@ -57,6 +56,26 @@ def normalise_and_filter(img, intensity_filter):
             hi[i, j] = normalised[i, j] > intensity_filter
 
     return hi
+
+
+def normalise(img):
+    max_intensity = np.max(img)
+    min_intensity = np.min(img)
+    normalised = img.copy()
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            normalised[i, j] = (img[i, j] - min_intensity) / (max_intensity - min_intensity)
+    return normalised
+
+def load_wct(path):
+    import pandas as pd
+
+    img = pd.read_csv(path, skiprows=5, header=None)
+    img = pd.DataFrame.as_matrix(img)
+    img = np.reshape(img, ([479, 640]))
+    target = np.ones([480, 640])
+    target[:-1, :] = img
+    return target
 
 def plot_figures(*args):
     from matplotlib import pyplot as plt

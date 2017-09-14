@@ -65,8 +65,9 @@ class SPGD:
     def optimize(self, strategy):
         control_signal = self.initialise_control_signal()
         metric = strategy(control_signal)
-        print("ignore the following")
         iteration = 0
+        if self.debug:
+            print("initial error: "+str(metric))
         metric_history = []
         while metric > self.convergence_criterion and iteration < self.max_iterations:
             delta_u = self.gen_perturbation()
@@ -125,10 +126,7 @@ class SPGD:
 
     def difference_with_target(self, signal):
 
-        img = self.ao_wrapper.deform_and_capture(signal)
-        np.savetxt("raw_capture.csv", img, delimiter=",")
-        img = SPGDutils.normalise_and_filter(img, 0)
-        np.savetxt("normalised_capture.csv", img, delimiter=",")
+        img = SPGDutils.normalise(self.ao_wrapper.deform_and_capture(signal))
         error = 0
 
         for i in range(img.shape[0]):

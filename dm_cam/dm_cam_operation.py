@@ -90,7 +90,9 @@ class DMCamOperation(Thread):
         data = self.camera.ctrl.GetWinCamDataAsVariant()
         data = [[x] for x in data]
         data = numpy.reshape(data, [480, 640])
-        return data - self.burn
+        data -= self.burn
+        data[data<0]=0
+        return data
 
     def deform_and_capture(self, signal):
         """Send signal to mirror, wait 200 ms, then image it"""

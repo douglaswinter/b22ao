@@ -25,6 +25,8 @@ beam = cam.frame(dist[0]).copy()
 
 # target
 target = cam.frame(None).copy()
+# import SPGDutils
+# target = SPGDutils.generate_gaussian_target(beam, 10)
 
 
 # system wrapper
@@ -56,15 +58,15 @@ ao_wrapper = SystemWrapper(conf, dm, cam, dist)
 
 # these parameters worked for target strategy
 spgd = SPGD(ao_wrapper=ao_wrapper,
-            debug=False,
+            debug=True,
             num_act=n_acts,
             min_v=-1,
             max_v=1,
             target=target,
             convergence_criterion=0.01,
             intensity_filter=0.4,
-            gamma=-100,
-            max_iterations=5000
+            gamma=-0.1,
+            max_iterations=500
             )
 
 spgd.optimise_with_target()
