@@ -24,7 +24,7 @@ def subtracting():
 
 def masking():
     import numpy.ma as ma
-    masked = ma.array(original_target, mask=[burn>1], fill_value=1)
+    masked = ma.array(original_target, mask=[burn > 1], fill_value=1)
     corrected = normalise(masked.filled())
     target = generate_gaussian_target(corrected, width)
     if plot:
@@ -34,7 +34,7 @@ def masking():
 
 
 def calculate_error(img, target):
-    pixel_errors=[]
+    pixel_errors = []
     error = 0
 
     for i in range(img.shape[0]):
@@ -51,4 +51,3 @@ e_sub = subtracting()
 
 print("Subtracting: " + str(e_sub))
 print("Masking: " + str(e_mask))
-

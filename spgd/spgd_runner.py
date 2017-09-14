@@ -29,8 +29,9 @@ class WinCamDALPAOSPGD(DMCamOperation):
         if not self.target:
             print("Target not specified, will generate from camera capture")
             width = 1e-3 // 17e-6
-            self.target = SPGDutils.generate_gaussian_target(self.capture(), width, 0.25)
-           # SPGDutils.plot_figures(self.capture(), self.target)
+            img = SPGDutils.normalise(self.capture())
+            self.target = SPGDutils.generate_gaussian_target(img, width, 0.25)
+            SPGDutils.plot_figures(self.capture(), self.target)
 
         # initiate spgd object
         self.spgd = SPGD(self,

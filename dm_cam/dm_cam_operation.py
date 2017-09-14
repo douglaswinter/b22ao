@@ -20,8 +20,7 @@ class DMCamOperation(Thread):
         self.camera = None
         self.mirror = None
         self.label = label
-        
-        
+
         if burn:
             self.burn = numpy.loadtxt("burned_pixels.csv", delimiter=",")
             self.capture = self.capture_with_burn
@@ -39,13 +38,7 @@ class DMCamOperation(Thread):
         This method is called by DMCamRunner, getting the camera object through activeX
         :param camera:
         """
-#        import time
-
         self.camera = camera
-#        self.camera.ctrl.StartDriver()
-#        time.sleep(5)
-#        self.camera.ctrl.StartDevice()
-#        time.sleep(1)
 
     def set_mirror(self, mirror):
         """

@@ -23,6 +23,7 @@ def find_centre(img, intensity_filter):
     Martin Stancsics's answer to
     stackoverflow.com/questions/37519238/python-find-centre-of-object-in-an-image
     :param img: in matrix notation i, j
+    :param intensity_filter: img will be flattened; values below this -> 0; above -> 1
     :return: i0, j0
     """
     hi = normalise_and_filter(img, intensity_filter)

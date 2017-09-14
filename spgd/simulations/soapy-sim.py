@@ -49,7 +49,8 @@ class SystemWrapper:
         :param signal: to send to DM. 1d array, of size dm.getActiveActs()
         :return: corrected image, of size self.conf.sim.scrnSize ** 2
         """
-        dm_correction = numpy.zeros((self.configuration.sim.nDM, self.configuration.sim.scrnSize, self.configuration.sim.scrnSize))
+        dm_correction = numpy.zeros((self.configuration.sim.nDM, self.configuration.sim.scrnSize,
+                                     self.configuration.sim.scrnSize))
         dm_correction[0] = self._deform(signal)
         return self._snapshot(dm_correction)
 
