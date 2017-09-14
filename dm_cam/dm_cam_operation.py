@@ -91,8 +91,7 @@ class DMCamOperation(Thread):
         data = self.camera.ctrl.GetWinCamDataAsVariant()
         data = [[x] for x in data]
         data = numpy.reshape(data, [480, 640])
-        masked = ma.array(data, mask=[self.burn > 1])
-        ma.set_fill_value(masked, 1)
+        masked = ma.array(data, mask=[self.burn > 1], fill_value=1)
         return masked.filled()
 
     def deform_and_capture(self, signal):

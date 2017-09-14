@@ -24,8 +24,7 @@ def subtracting():
 
 def masking():
     import numpy.ma as ma
-    masked = ma.array(original_target, mask=[burn>1])
-    ma.set_fill_value(masked, 1)
+    masked = ma.array(original_target, mask=[burn>1], fill_value=1)
     corrected = normalise(masked.filled())
     target = generate_gaussian_target(corrected, width)
     if plot:
