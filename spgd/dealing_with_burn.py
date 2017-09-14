@@ -11,15 +11,10 @@ width = 1e-3 // 17e-6  # target width
 def subtracting():
 
     raw = original_target-burn
-
     raw[raw < 0] = 0  # background is 0; where burn was is < 0
-
     normalised = normalise(raw)
-
     target = generate_gaussian_target(normalised, width, 0.25, centre=None)
-
     plot_figures(original_target, raw, normalised, target, normalised - target)
-
     print(calculate_error(normalised, target))
 
 
@@ -48,5 +43,3 @@ def calculate_error(img, target):
 # masking()  # not working yet
 
 subtracting()
-
-

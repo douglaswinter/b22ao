@@ -44,8 +44,8 @@ class WinCamDALPAOSPGD(DMCamOperation):
                          intensity_filter=intensity_filter,
                          debug=True
                          )
-        self.spgd.optimise_with_target()
-
+        control_signal = self.spgd.optimise_with_target()
+        SPGDutils.save_array(control_signal, "Mirror_Command.csv")
 
 if __name__ == "__main__":
     mirror_serial = "BAX111"

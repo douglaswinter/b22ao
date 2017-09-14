@@ -67,6 +67,7 @@ def normalise(img):
             normalised[i, j] = (img[i, j] - min_intensity) / (max_intensity - min_intensity)
     return normalised
 
+
 def load_wct(path):
     import pandas as pd
 
@@ -77,6 +78,7 @@ def load_wct(path):
     target[:-1, :] = img
     return target
 
+
 def plot_figures(*args):
     from matplotlib import pyplot as plt
     for arg in args:
@@ -84,3 +86,11 @@ def plot_figures(*args):
         plt.imshow(arg)
         
     plt.show()
+
+
+def save_array(array, path, delimiter=","):
+    np.savetxt(array, path, delimiter=delimiter)
+
+
+def load_array(path, delimiter=","):
+    np.loadtxt(path, delimiter=delimiter)
