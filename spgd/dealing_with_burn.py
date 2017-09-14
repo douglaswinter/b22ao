@@ -7,6 +7,8 @@ width = 1e-3 // 17e-6  # target width
 
 # raw = np.loadtxt("raw_capture.csv", delimiter=",")  # already subtracted
 
+plot = False
+
 
 def subtracting():
 
@@ -14,16 +16,22 @@ def subtracting():
     raw[raw < 0] = 0  # background is 0; where burn was is < 0
     normalised = normalise(raw)
     target = generate_gaussian_target(normalised, width, 0.25, centre=None)
-    plot_figures(original_target, raw, normalised, target, normalised - target)
-    print(calculate_error(normalised, target))
+    if plot:
+        plot_figures(original_target, raw, normalised, target, normalised - target)
+    error = calculate_error(normalised, target)
+    return error
 
 
 def masking():
     import numpy.ma as ma
     masked = ma.array(original_target, mask=[burn>1])
-    target = generate_gaussian_target(masked, width)
-    plot_figures(masked, target)
-    print(calculate_error(masked, target))
+    ma.set_fill_value(masked, 1)
+    corrected = normalise(masked.filled())
+    target = generate_gaussian_target(corrected, width)
+    if plot:
+        plot_figures(corrected, target)
+    error = calculate_error(corrected, target)
+    return error
 
 
 def calculate_error(img, target):
@@ -35,11 +43,13 @@ def calculate_error(img, target):
             pixel_error = (img[i, j] - target[i, j])**2
             pixel_errors.append(pixel_error)
             error += pixel_error
-    print("total error = " + str(error))
-    print("max pixel error = "+str(max(pixel_errors)))
 
     return error
 
-# masking()  # not working yet
+e_mask = masking()
 
-subtracting()
+e_sub = subtracting()
+
+print("Subtracting: " + str(e_sub))
+print("Masking: " + str(e_mask))
+

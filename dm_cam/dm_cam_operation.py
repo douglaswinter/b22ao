@@ -87,12 +87,13 @@ class DMCamOperation(Thread):
         Camera snapshot
         :return: 640 x 480 array
         """
+        import numpy.ma as ma
         data = self.camera.ctrl.GetWinCamDataAsVariant()
         data = [[x] for x in data]
         data = numpy.reshape(data, [480, 640])
-        data -= self.burn
-        data[data<0]=0
-        return data
+        masked = ma.array(data, mask=[self.burn > 1])
+        ma.set_fill_value(masked, 1)
+        return masked.filled()
 
     def deform_and_capture(self, signal):
         """Send signal to mirror, wait 200 ms, then image it"""
