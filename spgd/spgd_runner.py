@@ -11,8 +11,8 @@ num_act = 97
 maxV = 1
 minV = -1
 convergence_criterion = 1e-6
-max_iterations = 500
-gamma = -100
+max_iterations = 2000
+gamma = -1000
 intensity_filter = 0
 
 
@@ -30,7 +30,7 @@ class WinCamDALPAOSPGD(DMCamOperation):
 
         if not self.target:
             print("Target not specified, will generate from camera capture")
-            width = 0.5e-3 // 17e-6
+            width = 2e-3 // 17e-6
             img = self.capture()
             # norm = SPGDutils.normalise(img)
             # SPGDutils.plot_figures(img, norm)

@@ -31,8 +31,8 @@ dm2 = DM( "BAX112" )
 dm1.Reset()
 dm2.Reset()
 
-#import numpy as np
-#
-#signal = np.loadtxt("mirror_command_1.csv", delimiter=",")
-#dm1.Send(signal)
+import numpy as np
+
+signal = np.loadtxt("mirror_command.csv", delimiter=",")
+dm1.Send(signal)
 
