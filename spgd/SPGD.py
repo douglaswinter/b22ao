@@ -132,15 +132,8 @@ class SPGD:
 
     def difference_with_target(self, signal):
 
-        img = SPGDutils.normalise(self.ao_wrapper.deform_and_capture(signal))
-        # img = self.ao_wrapper.deform_and_capture(signal)
-        # img = SPGDutils.normalise_and_filter(self.ao_wrapper.deform_and_capture(signal), 0.4)
-        error = 0
-
-        for i in range(img.shape[0]):
-            for j in range(img.shape[1]):
-                error += (img[i, j] - self.target[i, j])**2
-        return error
+        img = SPGDutils.normalise(abs(self.ao_wrapper.deform_and_capture(signal)))
+        return ((img - self.target) ** 2).mean(axis=None)
 
     def biggest_distance_from_centre(self, signal):
 

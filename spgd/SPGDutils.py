@@ -60,13 +60,15 @@ def normalise_and_filter(img, intensity_filter):
 
 
 def normalise(img):
-    max_intensity = np.max(img)
-    min_intensity = np.min(img)
-    normalised = img.copy()
-    for i in range(img.shape[0]):
-        for j in range(img.shape[1]):
-            normalised[i, j] = (img[i, j] - min_intensity) / (max_intensity - min_intensity)
-    return normalised
+    return (img-img.min())/(img.max()-img.min())
+
+
+def flatten(img, threshold):
+    import numpy.ma as ma
+    norm = normalise(img)
+    mnorm = ma.array(norm, mask=[norm>=threshold], fill_value=1)
+    mnorm = ma.array(mnorm.filled(), mask=[norm<threshold], fill_value=0)
+    return mnorm.filled()
 
 
 def load_wct(path):
