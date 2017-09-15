@@ -47,7 +47,10 @@ def make_integer(num):
 
 
 def normalise(img):
-    return (img-img.min())/(img.max()-img.min())
+    from sklearn.preprocessing import MinMaxScaler
+    scaler = MinMaxScaler()
+    scaler.fit(img)
+    return scaler.transform(img)
 
 
 def flatten(img, threshold):

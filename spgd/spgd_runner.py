@@ -3,7 +3,6 @@ sys.path.insert(0, os.path.abspath('..'))
 # Integrated DM and WinCamD system for custom operations
 from dm_cam.dm_cam_runner import DMCamRunner
 from dm_cam.dm_cam_operation import DMCamOperation
-from SPGDutils import *
 
     
 # parameters for SPGD algorithm
@@ -12,9 +11,9 @@ num_act = 97
 maxV = 1
 minV = -1
 convergence_criterion = 1e-6
-max_iterations = 30
-gamma = -10
-intensity_filter = 0.45
+max_iterations = 500
+gamma = -100
+intensity_filter = 0
 
 
 class WinCamDALPAOSPGD(DMCamOperation):
@@ -26,15 +25,19 @@ class WinCamDALPAOSPGD(DMCamOperation):
 
     def run(self):
         from SPGD import SPGD
+        import SPGDutils
+        import numpy as np
 
         if not self.target:
             print("Target not specified, will generate from camera capture")
-            width = 1e-3 // 17e-6
+            width = 0.5e-3 // 17e-6
             img = self.capture()
-            self.target = generate_gaussian_target(img, width, 0.5, None)
-
-            plot_figures(img, self.target)
+            # norm = SPGDutils.normalise(img)
+            # SPGDutils.plot_figures(img, norm)
+            self.target = SPGDutils.generate_gaussian_target(img, width, 0.1, None)
             
+            SPGDutils.plot_figures(img, self.target)
+            np.savetxt("original.csv", img, delimiter=",")
 
         # initiate spgd object
         self.spgd = SPGD(self,
@@ -50,6 +53,7 @@ class WinCamDALPAOSPGD(DMCamOperation):
                          )
 
         control = self.spgd.optimise_with_target()
+        np.savetxt("mirror_command.csv", control, delimiter=",")
         
 
 if __name__ == "__main__":

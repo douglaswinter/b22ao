@@ -80,14 +80,12 @@ class SPGD:
             metric = strategy(control_signal)
             metric_history.append(metric)
             if self.debug:
-                print("iteration number %d" % iteration)
-                print("J = %f" % metric)
-                print(control_signal[40:45])
+                print("iteration number %d: J = %f" % (iteration, metric))
             iteration += 1
 
         if self.plot:
             print("***************\nFinished after %d iterations\n***************" % iteration)
-            print("J = %f" % str(metric))
+            print("J = %f" % metric)
             img = self.ao_wrapper.deform_and_capture(control_signal)
             self.plot_results(img, metric_history)
 
@@ -118,7 +116,7 @@ class SPGD:
         return np.ones(self.num_act)*start
 
     def gen_perturbation(self):
-        amplitude = 0.2
+        amplitude = 0.3
         sigmas = [-amplitude, amplitude]
         return np.random.choice(sigmas, self.num_act)
 
