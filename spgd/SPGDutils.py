@@ -2,7 +2,7 @@ import numpy as np
 from math import ceil, floor
 
 
-def generate_gaussian_target(beam, fwhm=5e-3, intensity_filter=0.25, centre=None):
+def generate_gaussian_target(beam, fwhm=10, intensity_filter=0.25, centre=None):
     """If target is not provided, will capture image,
     and generate a gaussian with specified FWHM"""
 
@@ -46,19 +46,6 @@ def make_integer(num):
         return ceil(num)
 
 
-def normalise_and_filter(img, intensity_filter):
-    max_intensity = np.max(img)
-    min_intensity = np.min(img)
-    normalised = img.copy()
-    hi = np.zeros(img.shape)
-    for i in range(img.shape[0]):
-        for j in range(img.shape[1]):
-            normalised[i, j] = (img[i, j] - min_intensity) / (max_intensity - min_intensity)
-            hi[i, j] = normalised[i, j] > intensity_filter
-
-    return hi
-
-
 def normalise(img):
     return (img-img.min())/(img.max()-img.min())
 
@@ -89,11 +76,3 @@ def plot_figures(*args):
         plt.imshow(arg)
         
     plt.show()
-
-
-def save_array(array, path, delimiter=","):
-    np.savetxt(array, path, delimiter=delimiter)
-
-
-def load_array(path, delimiter=","):
-    np.loadtxt(path, delimiter=delimiter)

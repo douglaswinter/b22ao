@@ -67,23 +67,17 @@ class SPGD:
         metric = strategy(control_signal)
         iteration = 0
         if self.debug:
-            print("initial error: "+str(metric))
+            print("initial error: %f" % metric)
         metric_history = []
         while metric > self.convergence_criterion and iteration < self.max_iterations:
             delta_u = self.gen_perturbation()
-            #print(delta_u)
             u_plus = control_signal + delta_u
             u_minus = control_signal - delta_u
             j_u_plus = strategy(u_plus)
-            #print(j_u_plus)
             j_u_minus = strategy(u_minus)
-            #print(j_u_minus)
             delta_j = j_u_plus - j_u_minus
-            #print(delta_j)
             control_signal = control_signal + self.gamma * delta_u * delta_j
-            #print(control_signal[50:55])
             metric = strategy(control_signal)
-            #print(metric)
             metric_history.append(metric)
             if self.debug:
                 print("iteration number %d" % iteration)
@@ -92,10 +86,8 @@ class SPGD:
             iteration += 1
 
         if self.plot:
-            print("***************\nFinished after " + str(iteration) + " iterations\n")
-#            print("Control vector:")
-#            print(control_signal)
-            print("J = " + str(metric))
+            print("***************\nFinished after %d iterations\n***************" % iteration)
+            print("J = %f" % str(metric))
             img = self.ao_wrapper.deform_and_capture(control_signal)
             self.plot_results(img, metric_history)
 
