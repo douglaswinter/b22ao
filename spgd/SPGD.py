@@ -82,7 +82,7 @@ class SPGD:
             if self.debug:
                 print("iteration number %d" % iteration)
                 print("J = %f" % metric)
-                print(control_signal[50:60])
+                print(control_signal[40:45])
             iteration += 1
 
         if self.plot:

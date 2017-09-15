@@ -49,7 +49,8 @@ class WinCamDALPAOSPGD(DMCamOperation):
                          debug=True
                          )
 
-        self.spgd.optimise_with_target()
+        control = self.spgd.optimise_with_target()
+        
 
 if __name__ == "__main__":
     mirror_serial = "BAX111"
