@@ -26,7 +26,7 @@ def find_centre(img, intensity_filter):
     :param intensity_filter: img will be flattened; values below this -> 0; above -> 1
     :return: i0, j0
     """
-    hi = normalise_and_filter(img, intensity_filter)
+    hi = flatten(img, intensity_filter)
     hi = hi / np.sum(np.sum(hi))
 
     # marginal distributions

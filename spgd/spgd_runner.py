@@ -3,6 +3,7 @@ sys.path.insert(0, os.path.abspath('..'))
 # Integrated DM and WinCamD system for custom operations
 from dm_cam.dm_cam_runner import DMCamRunner
 from dm_cam.dm_cam_operation import DMCamOperation
+from SPGDutils import *
 
     
 # parameters for SPGD algorithm
@@ -24,35 +25,15 @@ class WinCamDALPAOSPGD(DMCamOperation):
         self.target = target
 
     def run(self):
-        import SPGDutils
         from SPGD import SPGD
-        
-        import numpy as np
-        import numpy.ma as ma
+
         if not self.target:
             print("Target not specified, will generate from camera capture")
             width = 1e-3 // 17e-6
             img = self.capture()
-            
-            print(np.max(img))
-            print(img.min())
-#            np.savetxt("RAW.csv", img, delimiter=",")
-#            normimg = (img-img.min())/(img.max()-img.min())
-#            
-##            masked = ma.array(img, mask=[img<1], fill_value=10)
-##            img = masked.filled()
-#            self.target = SPGDutils.generate_gaussian_target(img, 100, 0.25)
-#            
-#            error = 0
-#
-#            for i in range(img.shape[0]):
-#                for j in range(img.shape[1]):
-#                    error += (img[i, j] - self.target[i, j])**2
-#            print(error)
-#            
-#            SPGDutils.plot_figures(img, normimg, self.target)
-#            
-#            SPGDutils.plot_figures(np.loadtxt("RAW.csv", delimiter=","))
+            self.target = generate_gaussian_target(img, width, 0.5, None)
+
+            plot_figures(img, self.target)
             
 
         # initiate spgd object
@@ -67,16 +48,8 @@ class WinCamDALPAOSPGD(DMCamOperation):
                          intensity_filter=intensity_filter,
                          debug=True
                          )
-        # self.spgd.optimise_with_target()
-#        print("initial error:")
-#        signal = self.spgd.initialise_control_signal()
-#        print(self.spgd.difference_with_target(signal))
-#        
-#        delta_u = self.spgd.gen_perturbation()
-#        jum = self.spgd.difference_with_target(signal-delta_u)
-#        jup = self.spgd.difference_with_target(signal+delta_u)
-#        print("Delta J = " + str(jup-jum))
 
+        self.spgd.optimise_with_target()
 
 if __name__ == "__main__":
     mirror_serial = "BAX111"
